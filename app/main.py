@@ -45,6 +45,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Database setup
+# TODO: Set up environment variables for sensitive data
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://sortbot:sortbot@localhost:5432/sortbot_db")
 
 engine = create_engine(
@@ -86,7 +87,7 @@ app.add_middleware(
 )
 
 # API Routes
-v1_router = APIRouter(prefix="/api/v1")
+v1_router = APIRouter(prefix="/api/v1") # TODO: use the versioning system properly
 
 @app.get("/")
 async def root():
