@@ -47,7 +47,12 @@ logger = logging.getLogger(__name__)
 # Database setup
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://sortbot:sortbot@localhost:5432/sortbot_db")
 
-engine = create_engine(DATABASE_URL)
+engine = create_engine(
+    DATABASE_URL,
+    pool_size=10,
+    max_overflow=20,
+    pool_pre_ping=True
+)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
@@ -80,8 +85,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Load test cases from input files
-
 # API Routes
 v1_router = APIRouter(prefix="/api/v1")
 
@@ -92,6 +95,12 @@ async def root():
 @app.post("/bots", response_model=BotResponse)
 async def create_bot(bot: BotCreate, db: Session = Depends(get_db)):
     """Create a new bot"""
+    # Validate bot code for security concerns
+    if "import os" in bot.code or "subprocess" in bot.code:
+        raise HTTPException(status_code=400, detail="Prohibited code detected")
+    if len(bot.code) > 10000:  # Limit code length to prevent abuse
+        raise HTTPException(status_code=400, detail="Code too long")
+
     db_bot = Bot(**bot.dict())
     db.add(db_bot)
     db.commit()
