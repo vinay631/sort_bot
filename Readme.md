@@ -37,7 +37,8 @@ Bots are evaluated by:
 4. Handling timeouts and errors gracefully
 5. Calculating overall performance score
 
-### Design Decisions
+## Design Decisions
+
 `FastAPI` is used as the web framework with `Postgres` as backend database with `sqlalchemy` being the ORM. `alembic` is used for data migration.
 
 Bot submitted code runs in a asyncio created subprocess which has a default timeout of 30 seconds. The implementation for this can be found in `bot_evaluator.py` module. The current solution to run the bot submitted code is vulnerable to security attack like File system access (`open('/etc/passwd')`), Network requests (`urllib.request.urlopen()`), System commands (`os.system('rm -rf /')`) etc. A better solution would be to use a sandboxed environment using Docker, for example. In addition to this, we can also use python AST restrictions to enhance security.
@@ -82,7 +83,7 @@ alembic upgrade head
 
 3. **Start the API**:
 ```bash
-uvicorn main:app --reload
+uvicorn app.main:app --reload
 ```
 
 ### Option 2: Docker (NOT COMPLETE!!)
