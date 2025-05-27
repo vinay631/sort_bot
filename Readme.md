@@ -1,6 +1,6 @@
 # Sort Bot Leaderboard API
 
-A competitive platform for sorting algorithm bots built with FastAPI, PostgreSQL, and SQLAlchemy.
+A platform for sorting algorithm bots built with FastAPI, PostgreSQL, SQLAlchemy and Claude Sonnet 4.
 
 ## Features
 
@@ -43,7 +43,7 @@ Bots are evaluated by:
 
 Bot submitted code runs in a asyncio created subprocess which has a default timeout of 30 seconds. The implementation for this can be found in `bot_evaluator.py` module. The current solution to run the bot submitted code is vulnerable to security attack like File system access (`open('/etc/passwd')`), Network requests (`urllib.request.urlopen()`), System commands (`os.system('rm -rf /')`) etc. A better solution would be to use a sandboxed environment using Docker, for example. In addition to this, we can also use python AST restrictions to enhance security.
 
-We are using `Postgres` as our database of choice. Indices and partial indices have been added to the tables for optimizing common query performances. With this solution, we might be able scale the app for few hundred thousand bots, but beyond that, leaderboard queries and other analytical queries can overwhelm the database. We could have multiple read replicas but a better solution would be to use a hybrid approach with Postgres db and Redis. Postgres would be used for persisting bot metadata and Redis would be used to serve leaderboard queries using the data structure Sorted Sets which makes leaderboards simple to create and manipulate (query). 
+We are using `Postgres` as our database of choice. Indices and partial indices have been added to the tables for optimizing common query performances. With this solution, we might be able scale the app for few hundred thousand bots, but beyond that, the leaderboard queries and other analytical queries can overwhelm the database. We could have multiple read replicas but a better solution would be to use a hybrid approach with Postgres db and Redis. Postgres would be used for persisting bot metadata and Redis would be used to serve leaderboard queries using the data structure Sorted Sets which makes leaderboards simple to create and manipulate (query). 
 
 Input validations are done using pydantic models.
 
@@ -124,7 +124,7 @@ Once running, visit:
 - `GET /submissions/{submission_id}/results` - Get detailed results
 
 ### API Usage
-`test_bots.py` provides an example of how to submit a bot in python. Another good source for usage is: http://localhost:8000/docs
+`example_usage.py` or `example_usage.sh` provides an example of how to submit a bot in python. Another good source for usage is: http://localhost:8000/docs
 
 ### Leaderboard
 
