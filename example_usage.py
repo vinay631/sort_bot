@@ -27,7 +27,7 @@ BASE_URL = "http://localhost:8000"
 async def create_bot():
     async with httpx.AsyncClient() as client:
         response = await client.post(f"{BASE_URL}/bots", json=BOT_PAYLOAD)
-        if response.status_code == 201:
+        if response.status_code == 200:
             print("Bot created successfully:", response.json())
 
             bot = response.json()
