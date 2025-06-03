@@ -205,9 +205,3 @@ sort-bot-leaderboard/
 ```bash
 pytest tests/
 ```
-
-## Stretch Goals Implemented
-
-- ✅ Handle bots that hang (timeout protection)
-- ✅ Filtering/Sorting of Leaderboard
-- ✅ Allow uploading or adding custom input arrays
