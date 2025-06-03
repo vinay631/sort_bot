@@ -37,16 +37,6 @@ Bots are evaluated by:
 4. Handling timeouts and errors gracefully
 5. Calculating overall performance score
 
-## Design Decisions
-
-`FastAPI` is used as the web framework with `Postgres` as backend database with `sqlalchemy` being the ORM. `alembic` is used for data migration.
-
-Bot submitted code runs in a asyncio created subprocess which has a default timeout of 30 seconds. The implementation for this can be found in `bot_evaluator.py` module. The current solution to run the bot submitted code is vulnerable to security attack like File system access (`open('/etc/passwd')`), Network requests (`urllib.request.urlopen()`), System commands (`os.system('rm -rf /')`) etc. A better solution would be to use a sandboxed environment using Docker, for example. In addition to this, we can also use python AST restrictions to enhance security.
-
-We are using `Postgres` as our database of choice. Indices and partial indices have been added to the tables for optimizing common query performances. With this solution, we might be able scale the app for few hundred thousand bots, but beyond that, the leaderboard queries and other analytical queries can overwhelm the database. We could have multiple read replicas but a better solution would be to use a hybrid approach with Postgres db and Redis. Postgres would be used for persisting bot metadata and Redis would be used to serve leaderboard queries using the data structure Sorted Sets which makes leaderboards simple to create and manipulate (query). 
-
-Input validations are done using pydantic models.
-
 ## Quick Start
 
 ### Prerequisites
