@@ -41,7 +41,7 @@ class BotEvaluator:
         if successful_results:
             total_score = sum(r.execution_time for r in successful_results) / len(successful_results)
         else:
-            total_score = float('inf')  # Penalty for failed bots
+            total_score = 1000000.0  # Penalty for failed bots
         
         # Update submission with total score
         submission = db.query(BotSubmission).filter(BotSubmission.id == submission_id).first()
